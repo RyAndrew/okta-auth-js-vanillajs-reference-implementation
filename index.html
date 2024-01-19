@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="https://glitch.com/favicon.ico" />
+
+    <title>Okta Auth JS</title>
+
+    <link rel="stylesheet" href="/style.css" />
+
+    <script src="https://global.oktacdn.com/okta-auth-js/7.5.0/okta-auth-js.min.js" integrity="sha384-FulMqBNnKrz1flNQn3s9TB1XkxsatViOcNjZOG21qEQlRNcRRJxDgLOVKmVqgfyM" crossorigin="anonymous"></script>
+    <style>
+      .hide-element {
+        display: none;
+      }
+      :root {
+        --color-bg: #F7BE69;
+      }
+      #error {
+        color: red;
+      }
+      .item-label {
+        font-weight:bold;
+        font-size:20px;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class="wrapper">
+      <div class="content" role="main">
+        <h1 class="title">Okta Auth JS</h1>
+
+        <div class="instructions">
+          <h2>
+            This is a basic login example using vanilla js <br/>
+            and the Okta Auth JS SDK<br/>
+            <a href="https://github.com/okta/okta-auth-js">https://github.com/okta/okta-auth-js</a>
+          </h2>
+          <p>
+<p>
+Login with:<br/>
+test@test.com<br/>
+Secret123$
+</p>
+  <span id="logged-out-cointainer">
+    <button id="signIn" onclick="clickSignIn()">Sign In</button><br/>
+  </span>
+  <span id="logged-in-cointainer" class="hide-element">
+    <br>
+    <div id="profile">
+      <span style="font-weight:bold;font-size:20px">Logged In As:</span><br>
+      <p>Name: <b><span id="name"></span></b></p>
+      <p>Email: <b><span id="email"></span></b></p>
+      <P><button id="signOut" onclick="clickSignOut()">Sign Out</button></P>
+      <p>Token Expire: <b><span id="expire"></span></b></p>
+      <p id="token-refresh-container" class="hide-element">Times Refreshed: <span id="token-refresh-count"></span></p>
+      <p><button id="refresh" onclick="clickRefreshTokens()">Refresh Tokens</button> <button id="clear" onclick="clickClearAllTokens()">Clear All Tokens</button> <button id="show-tokens" onclick="clickShowTokens()">Show Tokens</button><button id="hide-tokens" onclick="clickHideTokens()" class="hide-element">Hide Tokens</button></p>
+      <span class="item-label">Session Timer</span> <span id="timer"></span><BR/>
+      <span class="item-label">Idle Timer</span> <span id="idletimer"></span>
+    </div>
+  </span>
+      <span class="item-label">Okta Session:</span> <span id="session-status"></span>
+        <span id="session-close" class="hide-element"><button id="session-close" onclick="clickCloseSession()">Close Session</button></span> <br/>
+        <span id="session-expires-container" class="hide-element"><span class="item-label">Session Expires:</span> <span id="session-expires"></span></span>
+      </span>
+  <p id="error"></p>
+  <p id="tokens"></p>
+  <button id="show-debug-log" onclick="clickShowLog()">Show Debug Log</button>
+  <button id="hide-debug-log" class="hide-element" onclick="clickHideLog()">Hide Debug Log</button>
+  <pre id="debug-log" class="hide-element"></pre>
+    <script src="okta-config.js?rev=2024-01-19"></script>
+    <script src="okta-app.js?rev=2024-01-19"></script>
+
+          </p>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      rev-2024-01-19<BR>
+      <a class="btn--remix" target="_top" href="https://glitch.com/edit/#!/okta-authjs-sessions-refresh-tokens"><img src="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515/Logo_Color.svg?v=1618199565140" /> Edit on Glitch</a>
+    </footer>
+  </body>
+</html>
