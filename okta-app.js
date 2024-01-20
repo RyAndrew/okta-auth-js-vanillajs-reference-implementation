@@ -21,15 +21,15 @@ async function initSpaApp() {
     outputConfigToDebugLogger()
 
     oktaAuthInstance.authStateManager.subscribe(function (authState) {
-        debugLogger(`authStateManager Event! authState.isAuthenticated=${authState.isAuthenticated}`)
+        debugLogger(`Event! authStateManager authState.isAuthenticated=${authState.isAuthenticated}`)
 
         if (authState.isAuthenticated) {
             // Render authenticated view
-            debugLogger('Logged in!')
-            showTokenInfo()
+            debugLogger('Logged IN!')
+            showUserDataFromTokens()
         } else {
             // Render unathenticated view
-            debugLogger('NOT logged in!')
+            debugLogger('Logged OUT!')
             updateUiAuthenticatedStatus(false)
         }
     })
@@ -94,13 +94,12 @@ function attachIdleDetectionEventHandlers() {
 
 function addVisibilityListeners() {
     document.addEventListener("visibilitychange", () => {
-        debugLogger('Event! visibilitychange')
         if (!document.hidden) {
-            debugLogger('Visibility restored - updateAuthState() & check okta session')
+            debugLogger('Event! visibilitychange visible - updateAuthState() & check okta session')
             oktaAuthInstance.authStateManager.updateAuthState()
             checkIfOktaSessionExistsOrExpired()
         } else {
-            debugLogger('Visibility hidden')
+            debugLogger('Event! visibilitychange hidden')
         }
     })
 
@@ -135,23 +134,33 @@ async function debugOktaServices(){
 }
 
 oktaAuthInstance.tokenManager.on('expired', function (key, expiredToken) {
-    debugLogger(`Token with key ${key} has expired`)
+    debugLogger(`Event! tokenManager expired ${key}`)
     console.log('Expired Token:', expiredToken)
 })
 
 oktaAuthInstance.tokenManager.on('renewed', function (key, newToken, oldToken) {
-    debugLogger(`Token with key ${key} has been renewed`)
+    debugLogger(`Event! tokenManager renewed ${key}`)
     console.log('New Token:', newToken)
     if (key === 'accessToken') {
         tokenRefreshCount++
         updateTokenRefreshCount()
-        updateExpire(newToken)
+        showAccessTokenExpiration(newToken)
         runFiveMinTimer()
     }
 })
 
 oktaAuthInstance.tokenManager.on('error', function (err) {
-    debugLogger('TokenManager Error!', err)
+    debugLogger('Event! tokenManager Error!', err)
+})
+
+oktaAuthInstance.tokenManager.on('removed', function (key, removedToken) {
+    debugLogger(`Event! tokenManager removed ${key}`)
+    console.log('Expired Token:', removedToken)
+})
+
+oktaAuthInstance.tokenManager.on('added', function (key, addedToken) {
+    debugLogger(`Event! tokenManager added ${key}`)
+    console.log('Expired Token:', addedToken    )
 })
 
 function checkOktaSession() {
@@ -219,16 +228,16 @@ function showSessionStatus(session) {
     }
 }
 
-function showTokenInfo() {
+function showUserDataFromTokens() {
     oktaAuthInstance.tokenManager.get('accessToken').then(accessToken => {
         if (accessToken) {
             debugLogger('Token storage has Access Token')
             console.log(accessToken)
 
-            updateExpire(accessToken)
+            showAccessTokenExpiration(accessToken)
         } else {
             debugLogger('Token storage DOES NOT have Access Token')
-            updateExpire(null)
+            showAccessTokenExpiration(null)
         }
     })
     oktaAuthInstance.tokenManager.get('idToken').then(idToken => {
@@ -259,7 +268,7 @@ function clickRefreshTokens() {
     oktaAuthInstance.tokenManager.renew('accessToken')
         .then(function (newToken) {
             //debugLogger('Access Token Manually Refreshed!', newToken)
-            updateExpire(newToken)
+            showAccessTokenExpiration(newToken)
         }).catch(function (err) {
         debugLogger('Manual Token refresh error!', err)
     })
@@ -413,7 +422,7 @@ function getDateLocaleString(){
     return dateToFormat.toLocaleDateString() + ' ' + dateToFormat.toLocaleTimeString()
 }
 
-function updateExpire(accessToken) {
+function showAccessTokenExpiration(accessToken) {
     if (accessToken) {
         setInnerText('expire', convertTimeStampToDateTimeString(accessToken.expiresAt))
     } else {
