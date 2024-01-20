@@ -95,11 +95,11 @@ function attachIdleDetectionEventHandlers() {
 function addVisibilityListeners() {
     document.addEventListener("visibilitychange", () => {
         if (!document.hidden) {
-            debugLogger('Event! visibilitychange visible - updateAuthState() & check okta session')
+            debugLogger('Event! visibilitychange to visible - updateAuthState() & check okta session')
             oktaAuthInstance.authStateManager.updateAuthState()
             checkIfOktaSessionExistsOrExpired()
         } else {
-            debugLogger('Event! visibilitychange hidden')
+            debugLogger('Event! visibilitychange to hidden')
         }
     })
 
@@ -109,10 +109,10 @@ function addVisibilityListeners() {
     //     //noop!
     //     //having this event ensures when the back button is clicked the page reloads
     // })
-    window.addEventListener('pageshow', function(event) {
+    addEventListener('pageshow', (event) =>{
         debugLogger('Event! pageshow')
     })
-    window.addEventListener('pagehide', function(event) {
+    addEventListener('pagehide', (event) => {
         debugLogger('Event! pagehide')
     })
 }
