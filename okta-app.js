@@ -314,13 +314,13 @@ function showElement(id) {
 function updateUiAuthenticatedStatus(authenticated, idToken) {
 
     if (authenticated) {
-        hideElement('logged-out-cointainer')
-        showElement('logged-in-cointainer')
+        hideElement('logged-out-container')
+        showElement('logged-in-container')
         setInnerText('name', idToken.claims.name) //provided by profile scope
         setInnerText('email', idToken.claims.email) //provided by email scope
     } else {
-        showElement('logged-out-cointainer')
-        hideElement('logged-in-cointainer')
+        showElement('logged-out-container')
+        hideElement('logged-in-container')
         setInnerText('name', '')
         setInnerText('email', '')
         clickHideTokens()
