@@ -40,24 +40,22 @@ async function initSpaApp() {
         try {
             await oktaAuthInstance.handleRedirect()
         } catch (err) {
-            // log or display error details
             debugLogger('Error fetching tokens', err)
             setInnerText('error', err)
         }
     } else {
         debugLogger('Not Redirect')
-        startOktaService()
     }
+
+    startOktaService()
+
+    checkOktaSession()
 
     attachIdleDetectionEventHandlers()
 
     runFiveMinTimer()
 
     addVisibilityListeners()
-
-    checkOktaSession()
-
-    startOktaService()
 }
 
 async function startOktaService() {
