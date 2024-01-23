@@ -115,20 +115,30 @@ function addVisibilityListeners() {
     addEventListener('pagehide', (event) => {
         debugLogger('Event! pagehide')
     })
+
+    addEventListener("storage", (event) => {
+        if(event.key === oktaAuthInstance.tokenManager.options.storageKey){
+            debugLogger('Event! storage - updateAuthState()')
+            oktaAuthInstance.authStateManager.updateAuthState()
+        }
+    })
 }
 
 async function debugOktaServices(){
     //debug per https://github.com/okta/okta-auth-js/issues/1164
+
+    let elector = oktaAuthInstance.serviceManager.services.get('leaderElection')?.elector;
+
     let debugData = {
         syncStorage_CanStart: oktaAuthInstance.serviceManager.services.get('syncStorage').canStart(),
         syncStorage_isStarted: oktaAuthInstance.serviceManager.services.get('syncStorage').isStarted(), 
         autoRenew_CanStart: oktaAuthInstance.serviceManager.services.get('autoRenew').canStart(),
         autoRenew_isStarted: oktaAuthInstance.serviceManager.services.get('autoRenew').isStarted(),
         autoRenew_requiresLeadership: oktaAuthInstance.serviceManager.services.get('autoRenew').requiresLeadership(),
-        leaderElection_isLeader: oktaAuthInstance.serviceManager.services.get('leaderElection')?.elector?.isLeader || null,
-        leaderElection_isDead: oktaAuthInstance.serviceManager.services.get('leaderElection')?.elector?.isDead || null,
-        leaderElection_hasLeader: await oktaAuthInstance.serviceManager.services.get('leaderElection')?.elector?.hasLeader()  || null,
-        leaderElection_type: oktaAuthInstance.serviceManager.services.get('leaderElection')?.elector?.broadcastChannel?.method?.type  || null,
+        leaderElection_isLeader: elector === undefined ? null : elector.isLeader,
+        leaderElection_isDead: elector === undefined ? null : elector.isDead,
+        leaderElection_hasLeader: elector === undefined ? null : await elector.hasLeader(),
+        leaderElection_type: elector === undefined ? null : elector?.broadcastChannel?.method?.type,
     }
     debugLogger('debugOktaServices',debugData)
 }
